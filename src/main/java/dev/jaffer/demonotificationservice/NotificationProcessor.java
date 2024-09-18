@@ -4,57 +4,49 @@ import dev.jaffer.demonotificationservice.entity.Notification;
 import dev.jaffer.demonotificationservice.mapper.KafkaRecordToNotification;
 import dev.jaffer.demonotificationservice.notificationprocessingchain.handlers.Prioritizer;
 import dev.jaffer.demonotificationservice.notificationprocessingchain.handlers.SqsQueueManager;
+import dev.jaffer.demonotificationservice.notificationprocessingchain.handlers.UserEventHandler;
 import dev.jaffer.demonotificationservice.notificationprocessingchain.handlers.Validator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-/*
-    * This class is the entry point for the notification processing chain.
-    *
-    * Updated Flow with Templating:
-        Kafka Listener →
-        Validation (fetch user details, preferences) →
-        Prioritization →
-        Templating (generate the message) →
-        Save Notification Object →
-        Publish to SQS (or Scheduled Task)
 
- */
 @Component
 public class NotificationProcessor {
-
-
 
     private final KafkaRecordToNotification kafkaRecordToNotification;
     private final Validator validationHandler;
     private final Prioritizer prioritizer;
     private final SqsQueueManager sqsQueueManager;
-
-
-    //build the chain of responsibility
+    private final UserEventHandler userEventHandler;
 
     public NotificationProcessor(KafkaRecordToNotification kafkaRecordToNotification,
                                  Validator validationHandler,
                                  Prioritizer prioritizer,
-                                 SqsQueueManager sqsQueueManager) {
+                                 SqsQueueManager sqsQueueManager, UserEventHandler userEventHandler
+                                 ) {
         this.kafkaRecordToNotification = kafkaRecordToNotification;
         this.validationHandler = validationHandler;
         this.prioritizer = prioritizer;
         this.sqsQueueManager = sqsQueueManager;
+        this.userEventHandler = userEventHandler;
 
         // Set up the chain of responsibility
+        userEventHandler.setNext(validationHandler);
         validationHandler.setNext(prioritizer);
         prioritizer.setNext(sqsQueueManager);
-
-
-
     }
 
-    public void process(String payload) {
+    public void process(String payload, Long eventId) {
+        try {
+            // Map the Kafka record to Notification object
+            Notification notification = kafkaRecordToNotification.map(payload, eventId);
 
-        //map the kafka record to Notification object
-        //Notification  = kafkaRecordToNotification.map(record);
-        //call the first handler in the chain
-        validationHandler.handle(Notification notification);
+            // Call the first handler in the chain
+//            validationHandler.handle(notification);
+            userEventHandler.handle(notification);
+        } catch (Exception e) {
+            // Log the error and potentially implement retry or error handling logic
+            System.err.println("Error processing notification: " + e.getMessage());
+            e.printStackTrace();
+            // You might want to implement more sophisticated error handling here
+        }
     }
 }
-

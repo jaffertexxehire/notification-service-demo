@@ -1,5 +1,7 @@
 package dev.jaffer.demonotificationservice.notificationprocessingchain;
 
+import dev.jaffer.demonotificationservice.entity.Notification;
+
 public abstract class AbstractNotificationHandler implements NotificationHandler {
 
     protected NotificationHandler nextHandler;
@@ -13,7 +15,7 @@ public abstract class AbstractNotificationHandler implements NotificationHandler
     //used for passing the event to the next handler in the chain
     protected void passToNext(Notification notification) {
         if (nextHandler != null) {
-            nextHandler.handle(event);
+            nextHandler.handle(notification);
         }
     }
 }
