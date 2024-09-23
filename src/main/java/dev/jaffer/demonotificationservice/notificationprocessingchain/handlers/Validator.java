@@ -1,6 +1,7 @@
 package dev.jaffer.demonotificationservice.notificationprocessingchain.handlers;
 
 import dev.jaffer.demonotificationservice.entity.Notification;
+import dev.jaffer.demonotificationservice.entity.User;
 import dev.jaffer.demonotificationservice.notificationprocessingchain.AbstractNotificationHandler;
 import dev.jaffer.demonotificationservice.notificationprocessingchain.NotificationHandler;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,8 @@ public class Validator extends AbstractNotificationHandler {
         // For example:
         if (isValid(notification)) {
             // If valid fetch user details from the database and modify the notification
+            //iterate over the userIds and fetch the user details from the database
+            //and add them to the notification object List<User>
             passToNext(notification);
         } else {
             // Handle invalid notification (log error, send to dead-letter queue)

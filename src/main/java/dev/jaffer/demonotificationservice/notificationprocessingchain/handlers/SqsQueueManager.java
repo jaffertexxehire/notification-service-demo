@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class SqsQueueManager implements NotificationHandler {
 
     private final EventService eventService;
-    private final SqsService sqsService;
+    private final SqsService sqsService; //this can be an interface if you want to change the queue service in the future
     private NotificationHandler nextHandler;
 
     @Autowired

@@ -25,7 +25,7 @@ public class EventScheduler {
         this.notificationProcessor = notificationProcessor;
     }
 
-    @Scheduled(fixedDelayString = "${event.scheduler.fixed.delay:3000}")
+    @Scheduled(fixedDelayString = "${event.scheduler.fixed.delay:2000}")
     //@Transactional
     public void schedulePendingEvents() {
         List<Event> pendingEvents = eventRepository.findByStatusPending();

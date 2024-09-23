@@ -34,11 +34,11 @@ public class Notification{
     private String priority;
 
     @JsonProperty("metadata")
-    private Map<String,String> metadata;
+    private Map<String,Object> metadata;
 
     @JsonProperty("notificationType")
     private String notificationType;
 
-    //private List<User> userDetails;
+    private List<User> userDetails;
 
 }

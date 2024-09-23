@@ -20,6 +20,18 @@ public class Prioritizer extends AbstractNotificationHandler {
                 passToNext(notification);
                 return;
             }
+            else{
+
+                if(notification.getNotificationType().contains("USER")) {
+                    ///set priority to high
+                }else if(notification.getUserIds().size()>1){ //bulk notification
+                    //set priority to low
+
+                }
+                else{
+                    //set priority to medium
+                }
+            }
 
             // If priority not set, set the priority based on notification type and other factors
             NotificationPriority priority = determinePriority(notification);

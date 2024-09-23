@@ -26,10 +26,10 @@ public class SqsService {
     public boolean sendNotification(Notification notification) {
         try {
 
-            String notificationJson = objectMapper.writeValueAsString(notification);
+            String message = objectMapper.writeValueAsString(notification);
             SendMessageRequest send_msg_request = new SendMessageRequest()
                     .withQueueUrl(queueUrl)
-                    .withMessageBody(notificationJson)
+                    .withMessageBody(message)
                     .withDelaySeconds(5);
             sqsClient.sendMessage(send_msg_request);
             return true;

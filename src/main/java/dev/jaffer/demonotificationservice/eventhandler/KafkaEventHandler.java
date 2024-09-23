@@ -23,7 +23,7 @@ public class KafkaEventHandler {
     }
 
     @KafkaListener(topics = "notifications", groupId = "notificationservice")
-    public void handleNotifications(ConsumerRecord<String, String> record) {
+    public void handleNotifications(ConsumerRecord<String, String> record,Acknowledgment acknowledgment) {
         String payload = record.value();
         Long eventId = Long.parseLong(record.key());
         System.out.println("Received event with ID: " + eventId);
@@ -32,6 +32,7 @@ public class KafkaEventHandler {
             // Check if the event is already processed (deduplication)
             Optional<Event> existingEvent = eventRepository.findByEventId(eventId);
             if (existingEvent.isPresent()) {
+                acknowledgment.acknowledge();
                 return;
             }
 
@@ -43,6 +44,7 @@ public class KafkaEventHandler {
             eventRepository.save(event);
 
             //kafka message acknowledgment
+            acknowledgment.acknowledge();
         } catch (Exception e) {
             // Log the error and potentially trigger a retry mechanism
             // For simplicity, we're just printing the stack trace here
