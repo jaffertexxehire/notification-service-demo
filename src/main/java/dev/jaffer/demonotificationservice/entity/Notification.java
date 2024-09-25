@@ -41,4 +41,6 @@ public class Notification{
 
     private List<User> userDetails;
 
+    private List<UserChannelPreference> bulkChannelPreferences;
+
 }

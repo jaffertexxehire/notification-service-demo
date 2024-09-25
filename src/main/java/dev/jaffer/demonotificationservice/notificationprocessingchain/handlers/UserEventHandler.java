@@ -53,6 +53,9 @@ public class UserEventHandler extends AbstractNotificationHandler {
                     event.get().setStatus(Status.COMPLETED);
                     eventRepository.save(event.get());
                 }
+                //remove this later
+            //  passToNext(notification);
+
             } else {
                 saveNewUser(notification);
                 passToNext(notification);

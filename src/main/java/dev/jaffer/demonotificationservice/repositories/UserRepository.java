@@ -14,4 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<UserChannelPreference> findPreferencesByUserId(@Param("userId") Long userId);
 
     Optional<User> findByUserId(Long first);
+
+    List<User> findAllByIdIn(List<Long> userIds);
+
+    List<User> findAllByUserIdIn(List<Long> userIds);
 }
