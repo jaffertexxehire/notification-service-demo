@@ -5,7 +5,10 @@ package dev.jaffer.demonotificationservice.sqslistner;
 import dev.jaffer.demonotificationservice.notificationdispatch.SqsMessageProcessor;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import org.springframework.stereotype.Service;
-
+/*
+    *USe this as the listner not SQS consumer class
+    * This class listens to the SQS queues and processes the messages
+ */
 @Service
 public class SqsMessageListener {
 
